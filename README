@@ -1,0 +1,4 @@
+Hostribbon - print a colorful host indentifier for your shell prompt
+
+Usage
+    PS1="$(hostribbon) PS1"

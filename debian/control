@@ -1,0 +1,15 @@
+Source: hostribbon
+Section: misc
+Priority: extra
+Maintainer: Matti Pöllä <mpo@iki.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.6
+Homepage: https://github.com/mpolla/hostribbon
+
+Package: hostribbon
+Architecture: all
+Depends: ${misc:Depends}, bc
+Description: Host identity decoration for your shell prompt
+ Include a color ribbon in your shell prompt for easier host
+ identification when running multiple shells simultaneously.
+ 
