@@ -1,1 +1,4 @@
 *~
+debian/hostribbon/
+debian/hostribbon.debhelper.log
+debian/files
