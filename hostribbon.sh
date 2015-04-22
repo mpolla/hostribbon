@@ -1,19 +1,45 @@
-# Print a color ribbon to be included in shell prompts.
-function hostribbon {
+# Print a color ribbon to be included in shell prompts
+#
+# bash/dash:
+#            . hostribbon.sh
+#            PS1="$(hostribbon) $PS1"
+#
+# zsh:
+#            . hostribbon.sh
+#            PROMPT="$(hostribbon) $PROMPT"
+#
+
+gethostpubkeyfile () {
+    keyfile="/etc/ssh/ssh_host_dsa_key.pub"; [ -f $keyfile ] && printf $keyfile && return
+    keyfile="/etc/ssh/ssh_host_rsa_key.pub"; [ -f $keyfile ] && printf $keyfile && return
+    keyfile="/etc/ssh/ssh_host_ecdsa_key.pub"; [ -f $keyfile ] && printf $keyfile && return
+    keyfile="/etc/ssh/ssh_host_ed25519_key.pub"; [ -f $keyfile ] && printf $keyfile && return
+}
+
+hostribbon () {
     # A host pubkey is available
-    if [ -e /etc/ssh/ssh_host_rsa_key.pub ]; then
-        hostfpr=$(ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key.pub | cut -d ' ' -f 2 | sed -e 's/://g')
-        ribbonlen=3;
+    pubkeyfile=$(gethostpubkeyfile)
+    type ssh-keygen >/dev/null 2>&1
+    sshavailable=$?
+    hostfpr=""
+    if [ -n "$pubkeyfile" ]; then
+        if [ "$sshavailable" -eq "0" ]; then
+            hostfpr=$(ssh-keygen -l -f $pubkeyfile | cut -d ' ' -f 2 | sed -e 's/://g')
+            ribbonlen=3;
+        fi
+    fi
     # No host key available, use hostname
-    else
-        hostfpr=$(echo $(hostname).$(domainname) | md5sum | cut -d ' ' -f 1)
+    if [ "$hostfpr" = "" ]; then
+        hostfpr=$(printf $(hostname).$(domainname) | md5sum | cut -d ' ' -f 1)
         ribbonlen=2;
     fi
     # Map host fingerprint to ANSI shell colors 040 .. 047
     for pos in $(seq 1 $ribbonlen); do
-        color=$(echo $((0x$(echo $hostfpr | cut -c $pos))) % 8 | bc)
-        echo -n "\[\e[1;4"$color"m\] "
+        digit=$(printf "$hostfpr" | cut -c $pos | tr '[:lower:]' '[:upper:]')
+        bcexpr="ibase=16;$digit % 8"
+        color=$(echo "$bcexpr" | bc)
+        printf "\033[1;4"$color"m "
     done
     # Reset color
-    echo -n "\[\e[0m\]"
+    printf "\033[0m"
 }
