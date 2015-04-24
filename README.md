@@ -1,8 +1,13 @@
-Hostribbon - print a colorful host indentifier for your shell prompt
+# Hostribbon - print a colorful host indentifier for your shell prompt
 
-Bash howto:
+![Hostribbon screenshot](screenshot.png "Hostribbon screenshot")
+
+## Bash howto:
 
     . /usr/share/hostribbon/hostribbon.sh # or whereever hostribbon.sh is installed
     PS1="$(hostribbon) PS1"
 
-![Hostribbon screenshot](screenshot.png "Hostribbon screenshot")
+## Zsh howto:
+
+    . /usr/share/hostribbon/hostribbon.sh
+    PROMPT="$(hostribbon) $PROMPT"
