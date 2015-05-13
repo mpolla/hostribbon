@@ -8,7 +8,7 @@ Homepage: https://github.com/mpolla/hostribbon
 
 Package: hostribbon
 Architecture: all
-Depends: ${misc:Depends}, bc
+Depends: ${misc:Depends}, bc, ssh-client
 Description: Host identity decoration for your shell prompt
  Include a color ribbon in your shell prompt for easier host
  identification when running multiple shells simultaneously.
