@@ -24,7 +24,10 @@ hostribbon () {
     hostfpr=""
     if [ -n "$pubkeyfile" ]; then
         if [ "$sshavailable" -eq "0" ]; then
-            hostfpr=$(ssh-keygen -l -f $pubkeyfile | cut -d ' ' -f 2 | sed -e 's/://g')
+            # Parse SSH key fingerprint from e.g.
+            # 2048 00:11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff /Users/somebody
+            # 1024 SHA256:19n6fkdz0qqmowiBy6XEaA87EuG/jgWUr44ZSBhJl6Y (DSA)
+            hostfpr=$(ssh-keygen -l -f $pubkeyfile | cut -d ' ' -f2 | sed -e 's/[A-Z]\+[0-9]\+\://g' | sed -e 's/\://g')
             ribbonlen=3;
         fi
     fi
